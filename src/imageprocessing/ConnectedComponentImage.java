@@ -2,6 +2,7 @@ package imageprocessing;
 
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -65,9 +66,9 @@ public class ConnectedComponentImage
 	{
 		System.out.println("What image would you like to use?");
 		System.out.println("---------------------------------");
-		System.out.println("1) Shapes.bmp");
+		System.out.println("1) Shapes.bmp  (Works well");
 		System.out.println("2) Crosses.gif");
-		System.out.println("3) Bacteria.bmp");
+		System.out.println("3) Bacteria.bmp  (Works well)");
 		System.out.println("4) Stars.jpg  (Warning: this is a large picture that takes a long time to process)");
 		System.out.println("5) Stars2.jpg  (Warning: this is a large picture that takes a long time to process)");
 		int option = 0;
@@ -147,7 +148,7 @@ public class ConnectedComponentImage
 				break;
 		}
 		
-			pic.show();
+			//pic.show();
 		width = pic.width();
 		height = pic.height();
 		picture = binaryComponentImage(pic);
@@ -219,7 +220,18 @@ public class ConnectedComponentImage
 					
 				break;
 				case 3:
-					
+					System.out.println("");
+					System.out.println("");
+					System.out.println("Processing...");
+					colourComponentImage().show();
+					System.out.println("");
+					System.out.println("");
+					System.out.println("");
+					System.out.println("");
+					System.out.println("Done!");
+					System.out.println("");
+					System.out.println("Press any key to continue...");
+					input.next();
 				break;
 				default:
 				
@@ -289,14 +301,32 @@ public class ConnectedComponentImage
 	 */
 	public Picture colourComponentImage() 
 	{
-		for(int x = 0; x < count; x++)
+		Picture coloredPic = pic;
+		ArrayList<Color> colors = new ArrayList<Color>(); 
+		Random random = new Random();
+		for(int x = 0; x < height*width; x++)
 		{
-			Random random = new Random();
-			Color color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat());
+			colors.add(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat()));
 		}
 		
-		return null;
-
+		
+		for(int x = 0; x < width; x++)
+		{
+			for(int y = 0; y < height; y++)
+			{
+				int currentId = root(y*width+x);
+				
+				
+				
+				for(int i = 0; i < height*width; i++)
+				{
+					if(id[i] == currentId)
+						coloredPic.set(x, y, colors.get(root(y*width+x)));
+						
+				}
+			}
+		}
+		return coloredPic;
 	}
 
 	public Picture getPicture() {
