@@ -13,9 +13,8 @@ import edu.princeton.cs.introcs.Picture;
  * 
  * The <tt>ConnectedComponentImage</tt> class
  * <p>
- * You do the rest....
  * 
- * @author 
+ * @author Chris Bodels
  *************************************************************************/
 public class ConnectedComponentImage 
 {
@@ -34,25 +33,11 @@ public class ConnectedComponentImage
 	public ConnectedComponentImage() 
 	{
 		input = new Scanner(System.in);
-		/*pic = new Picture(fileLocation);
-		picture = binaryComponentImage(pic);
-		picture.show();
-		width = picture.width();
-		height = picture.height();
-		count = height*width;
-		pixels = new int[height*width];
-		id = new int[height*width];
-		sz = new int[height*width];
-		for(int i = 0; i < height*width; i++)
-		{
-			id[i] = i;
-			sz[i] = 0;
-		}*/
 	}
 	
 	/**
 	 * The main method that is called immediately when the program is run.
-	 * Calls constructor and specifies file location.
+	 * Calls constructor.
 	 * 
 	 * @param args
 	 */
@@ -62,6 +47,12 @@ public class ConnectedComponentImage
 		app.run();
 	}
 	
+	/**
+	 * This method is called at the start of the run method and displays the text for 
+	 * the menu that allows the user to select what image they would like to use.
+	 * 
+	 * @return The user's choice (an integer between one and 5)
+	 */
 	public int initialMenu()
 	{
 		System.out.println("What image would you like to use?");
@@ -87,6 +78,12 @@ public class ConnectedComponentImage
 		return option;
 	}
 	
+	/**
+	 * This method displays the text for the second menu of the program that allows
+	 * the user to choose what they would like to do with the chosen picture.
+	 * 
+	 * @return The user's choice (an integer between 0 and 3)
+	 */
 	public int secondMenu()
 	{
 		System.out.println("What would you like to do with this image?");
@@ -113,9 +110,9 @@ public class ConnectedComponentImage
 	}
 	
 	/**
-	 * This method allows the user to choose what they would like to do with the picture.
-	 * 
-	 * 
+	 * This method allows the user to choose what picture they will use in the program.
+	 * It also initializes some of the instance variables and unions pixels in the image
+	 * in order to be able to get a count and manipulate it later.
 	 */
 	public void run()
 	{
@@ -147,12 +144,9 @@ public class ConnectedComponentImage
 			
 				break;
 		}
-		
-			//pic.show();
 		width = pic.width();
 		height = pic.height();
 		picture = binaryComponentImage(pic);
-		//picture.show();
 		count = height*width;
 		id = new int[height*width];
 		sz = new int[height*width];
@@ -189,13 +183,15 @@ public class ConnectedComponentImage
 					}
 			}
 		}
-		System.out.println(countComponents());
-		//picture.show();
-		
-		main();
+		mainMenu();
 	}
 	
-	public void main()
+	/**
+	 * This method is the main method of the program which reappears until the program is 
+	 * terminated. It allows the user to choose what they would like to do with the image.
+	 * 
+	 */
+	public void mainMenu()
 	{
 		int option = secondMenu();
 		
@@ -246,11 +242,17 @@ public class ConnectedComponentImage
 	 * 
 	 * @return the number of components (between 1 and N)
 	 */
-	public int countComponents() {
-		// TODO
+	public int countComponents() 
+	{
 		return count-1;// -1 for the background
 	}
 	
+	/**
+	 * Unions two pixels so that they are part of the same component.
+	 * 
+	 * @param p the first pixel to be unioned
+	 * @param q the second pixel to be unioned
+	 */
 	public void union(int p, int q)
 	{
 		 int i = root(q), j = root(p);
@@ -267,6 +269,12 @@ public class ConnectedComponentImage
 		 count--;
 	}
 	
+	/**
+	 * Gets the root of pixel i which is used to identify what component it is in.
+	 * 
+	 * @param i the pixel to be checked
+	 * @return the root of the component that i is in
+	 */
 	private int root(int i) 
 	{
 		check(i);
@@ -276,23 +284,20 @@ public class ConnectedComponentImage
 			i = id[i];
 		}
 		return i;
-	} 
+	}  
 	
+	/**
+	 * Returns true if the two pixels being checked have the same root and are therefore 
+	 * in the same component.
+	 * 
+	 * @param p the first pixel to be checked
+	 * @param q the second pixel to be checked
+	 * @return true if the two pixels have the same root and false if they are not
+	 */
 	public boolean connected(int p, int q) 
 	{
 			return root(p) == root(q);
 	} 
-
-	/**
-	 * Returns the original image with each object bounded by a red box.
-	 * 
-	 * @return a picture object with all components surrounded by a red box
-	 */
-	public Picture identifyComonentImage() {
-
-		return null;
-
-	}
 
 	/**
 	 * Returns a picture with each object updated to a random colour.
@@ -309,14 +314,11 @@ public class ConnectedComponentImage
 			colors.add(new Color(random.nextFloat(), random.nextFloat(), random.nextFloat()));
 		}
 		
-		
 		for(int x = 0; x < width; x++)
 		{
 			for(int y = 0; y < height; y++)
 			{
 				int currentId = root(y*width+x);
-				
-				
 				
 				for(int i = 0; i < height*width; i++)
 				{
@@ -329,17 +331,43 @@ public class ConnectedComponentImage
 		return coloredPic;
 	}
 
+	/**
+	 * Returns the original, unmodified picture that was chosen at the start of the program.
+	 * 
+	 * @return a picture object of the original picture
+	 */
 	public Picture getPicture() {
-		// TODO Auto-generated method stub
-		return picture;
+		return pic;
 	}
 	
-	
+	/**
+	 * Returns the original image with each object bounded by a red box.
+	 * 
+	 * @return a picture object with all components surrounded by a red box
+	 */
+	public Picture highlightComponentImage()
+	{
+		for(int x = 0; x < width; x++)
+		{
+			for(int y = 0; y < height; y++)
+			{
+				if((x+1) < width)
+				{
+					
+				}
+				if((y+1) < height)
+				{
+					
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Returns a binarised version of the original image
 	 * 
-	 * @return a picture object with all components surrounded by a red box //FIX THIS
+	 * @return a picture object that has been binarised
 	 */
 	public Picture binaryComponentImage(Picture newPic) 
 	{
@@ -374,6 +402,11 @@ public class ConnectedComponentImage
 		return bAndWImage;
 	}
 	
+	/**
+	 * Used to check that the pixel being checked is in the array to avoid ArrayIndexOutOfBoundsExceptions
+	 * 
+	 * @param r the pixel being checked
+	 */
 	private void check(int r)
 	{
 		int N = id.length;
