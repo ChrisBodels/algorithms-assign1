@@ -58,10 +58,9 @@ public class ConnectedComponentImage
 		System.out.println("What image would you like to use?");
 		System.out.println("---------------------------------");
 		System.out.println("1) Shapes.bmp  (Works well");
-		System.out.println("2) Crosses.gif");
-		System.out.println("3) Bacteria.bmp  (Works well)");
-		System.out.println("4) Stars.jpg  (Warning: this is a large picture that takes a long time to process)");
-		System.out.println("5) Stars2.jpg  (Warning: this is a large picture that takes a long time to process)");
+		System.out.println("2) Bacteria.bmp  (Works well)");
+		System.out.println("3) Stars.jpg  (Warning: this is a large picture that takes a long time to process)");
+		System.out.println("4) Stars2.jpg  (Warning: this is a large picture that takes a long time to process)");
 		int option = 0;
 		boolean notGoodInput = false;
 		do
@@ -118,9 +117,9 @@ public class ConnectedComponentImage
 	{
 		int option = initialMenu();
 		
-		while(option != 1 && option != 2 && option != 3 && option != 4 && option != 5)
+		while(option != 1 && option != 2 && option != 3 && option != 4)
 		{
-			System.out.println("Invalid option entered. Please enter a number between 1 and 5");
+			System.out.println("Invalid option entered. Please enter a number between 1 and 4");
 			option = initialMenu();
 		}
 			switch(option)
@@ -128,16 +127,13 @@ public class ConnectedComponentImage
 				case 1:
 					pic = new Picture("images/shapes.bmp");
 				break;
-				case 2: 
-					pic = new Picture("images/crosses.gif");
-				break;
-				case 3:
+				case 2:
 					pic = new Picture("images/bacteria.bmp");
 				break;
-				case 4:
+				case 3:
 					pic = new Picture("images/stars.jpg");
 				break;
-				case 5:
+				case 4:
 					pic = new Picture("images/stars2.jpg");
 				break;
 				default:
@@ -213,7 +209,18 @@ public class ConnectedComponentImage
 					input.next();
 				break;
 				case 2:
-					
+					System.out.println("");
+					System.out.println("");
+					System.out.println("Processing...");
+					highlightComponentImage().show();
+					System.out.println("");
+					System.out.println("");
+					System.out.println("");
+					System.out.println("");
+					System.out.println("Done!");
+					System.out.println("");
+					System.out.println("Press any key to continue...");
+					input.next();
 				break;
 				case 3:
 					System.out.println("");
@@ -347,21 +354,42 @@ public class ConnectedComponentImage
 	 */
 	public Picture highlightComponentImage()
 	{
-		for(int x = 0; x < width; x++)
+		Picture highlightedPic = pic;
+		for(int z = 0; z < height*width; z++)
 		{
-			for(int y = 0; y < height; y++)
+			int maxX = 0;
+			int minX = width;
+			int maxY = 0;
+			int minY = height;
+			for(int x = 0; x < width; x++)
 			{
-				if((x+1) < width)
+				for(int y = 0; y < height; y++)
 				{
-					
-				}
-				if((y+1) < height)
-				{
-					
+					if(root(y*width+x) == id[z])
+					{
+						if(x < minX)
+							minX = x;
+						if(x > maxX)
+							maxX = x;
+						if(y < minY)
+							minY = y;
+						if(y > maxY)
+							maxY = y;
+					}
 				}
 			}
+			for(int x = minX; x <= maxX; x++)
+			{
+				highlightedPic.set(x, minY, Color.RED);
+				highlightedPic.set(x, maxY, Color.RED);
+			}
+			for(int y = minY; y <= maxY; y++)
+			{
+				highlightedPic.set(minX, y, Color.RED);
+				highlightedPic.set(maxX,  y,  Color.RED);
+			}
 		}
-		return null;
+		return highlightedPic;
 	}
 
 	/**
