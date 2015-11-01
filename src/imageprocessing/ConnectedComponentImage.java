@@ -90,6 +90,7 @@ public class ConnectedComponentImage
 		System.out.println("1) Return number of components in image");
 		System.out.println("2) Return image with components highlighted with a red bounding box");
 		System.out.println("3) Return image with each component randomly coloured");
+		System.out.println("4) Return binarised version of the image");
 		System.out.println("0) Exit");
 		int option = 0;
 		boolean notGoodInput = false;
@@ -193,7 +194,7 @@ public class ConnectedComponentImage
 		
 		while(option != 0)
 		{
-			while(option != 1 && option != 2 && option != 3)
+			while(option != 1 && option != 2 && option != 3 && option != 4)
 			{
 				System.out.println("Invalid option entered. Please enter a number between 0 and 3");
 				option = secondMenu();
@@ -227,6 +228,20 @@ public class ConnectedComponentImage
 					System.out.println("");
 					System.out.println("Processing...");
 					colourComponentImage().show();
+					System.out.println("");
+					System.out.println("");
+					System.out.println("");
+					System.out.println("");
+					System.out.println("Done!");
+					System.out.println("");
+					System.out.println("Press any key to continue...");
+					input.next();
+				break;
+				case 4:
+					System.out.println("");
+					System.out.println("");
+					System.out.println("Processing...");
+					binaryComponentImage(pic).show();
 					System.out.println("");
 					System.out.println("");
 					System.out.println("");
