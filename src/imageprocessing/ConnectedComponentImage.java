@@ -2,6 +2,7 @@ package imageprocessing;
 
 
 import java.awt.Color;
+import java.util.Random;
 import java.util.Scanner;
 
 import edu.princeton.cs.introcs.Picture;
@@ -18,9 +19,10 @@ import edu.princeton.cs.introcs.Picture;
 public class ConnectedComponentImage 
 {
 
-	private Picture picture, pic;
+	private Picture pic;
+	private Picture picture;
 	private int height, width, count;
-	private int[] pixels, id, sz;
+	private int[] id, sz;
 	private Scanner input;
 
 	/**
@@ -31,7 +33,10 @@ public class ConnectedComponentImage
 	public ConnectedComponentImage() 
 	{
 		input = new Scanner(System.in);
-		/*width = picture.width();
+		/*pic = new Picture(fileLocation);
+		picture = binaryComponentImage(pic);
+		picture.show();
+		width = picture.width();
 		height = picture.height();
 		count = height*width;
 		pixels = new int[height*width];
@@ -52,7 +57,6 @@ public class ConnectedComponentImage
 	 */
 	public static void main(String[] args)
 	{
-		
 		ConnectedComponentImage app = new ConnectedComponentImage();
 		app.run();
 	}
@@ -87,7 +91,7 @@ public class ConnectedComponentImage
 		System.out.println("What would you like to do with this image?");
 		System.out.println("---------------------------------");
 		System.out.println("1) Return number of components in image");
-		System.out.println("2) Return image with components highlighted");
+		System.out.println("2) Return image with components highlighted with a red bounding box");
 		System.out.println("3) Return image with each component randomly coloured");
 		System.out.println("0) Exit");
 		int option = 0;
@@ -100,6 +104,7 @@ public class ConnectedComponentImage
 			}
 			catch(Exception e) {
 				String throwOut = input.nextLine();
+				input.next();
 				System.out.println("Number expected, you entered text. (Stop trying to break my code)");
 			}
 		}while(!notGoodInput);
@@ -142,11 +147,12 @@ public class ConnectedComponentImage
 				break;
 		}
 		
+			pic.show();
+		width = pic.width();
+		height = pic.height();
 		picture = binaryComponentImage(pic);
-		width = picture.width();
-		height = picture.height();
+		//picture.show();
 		count = height*width;
-		pixels = new int[height*width];
 		id = new int[height*width];
 		sz = new int[height*width];
 		for(int i = 0; i < height*width; i++)
@@ -163,8 +169,6 @@ public class ConnectedComponentImage
 		{
 			for(int y = 0; y < height; y++)
 			{
-			//	System.out.println((x*width+y) + " " + x + " " + y + " " + ((x+1)*width+y));
-				//System.out.println(id[(x*width+y)] + " " + id[((x+1)*width+y)]);
 					p = picture.get(x,  y);
 					if((x+1) < width)
 					{
@@ -185,7 +189,7 @@ public class ConnectedComponentImage
 			}
 		}
 		System.out.println(countComponents());
-		picture.show();
+		//picture.show();
 		
 		main();
 	}
@@ -283,8 +287,14 @@ public class ConnectedComponentImage
 	 * 
 	 * @return a picture object with all components coloured.
 	 */
-	public Picture colourComponentImage() {
-
+	public Picture colourComponentImage() 
+	{
+		for(int x = 0; x < count; x++)
+		{
+			Random random = new Random();
+			Color color = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat());
+		}
+		
 		return null;
 
 	}
@@ -301,18 +311,18 @@ public class ConnectedComponentImage
 	 * 
 	 * @return a picture object with all components surrounded by a red box //FIX THIS
 	 */
-	public Picture binaryComponentImage(Picture picture) 
+	public Picture binaryComponentImage(Picture newPic) 
 	{
 		double thresholdPixelValue = 128.0;
-		Picture binarisedPicture = picture;
+		Picture bAndWImage = newPic; 
 		
 		for(int x=0; x < width; x++)
 		{
 			for(int y=0; y < height; y++)
 			{
-				Color c = binarisedPicture.get(x,y);
+				Color c = bAndWImage.get(x,y);
 				Color gray = Luminance.toGray(c);
-				binarisedPicture.set(x, y, gray);
+				bAndWImage.set(x, y, gray);
 			}
 		}
 		
@@ -320,18 +330,18 @@ public class ConnectedComponentImage
 		{
 			for(int y=0; y < height; y++)
 			{
-				Color c = binarisedPicture.get(x, y);
+				Color c = bAndWImage.get(x, y);
 				if(Luminance.lum(c) < thresholdPixelValue)
 				{
-					binarisedPicture.set(x, y, Color.BLACK);
+					bAndWImage.set(x, y, Color.BLACK);
 				}
 				else
 				{
-					binarisedPicture.set(x, y, Color.WHITE);
+					bAndWImage.set(x, y, Color.WHITE);
 				}
 			}
 		}
-		return binarisedPicture;
+		return bAndWImage;
 	}
 	
 	private void check(int r)
